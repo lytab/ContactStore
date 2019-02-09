@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
-
+use App\Contact;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -12,6 +12,37 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::group(['middleware' => 'api'], function () {
+    //Fetch Contact
+    Route::get('contact',function(){
+        return Contact::latest()->orderBy('created_at','desc')->get();
+    });
+    //Get Single Contact
+    Route::get('contact/{id}',function($id){
+        return Contact::findOrFail($id);
+    });
+    //Add Contact
+    Route::post('contact/store',function(Request $request){
+        return Contact::create([
+            'name'=>$request->name,
+            'email'=>$request->email,
+            'phone'=>$request->phone,
+        ]);
+    });
+    //Update Contact
+    Route::patch('contact/{id}',function(Request $request,$id){
+        return Contact::findOrFail($id)->update([
+            'name'=>$request->name,
+            'email'=>$request->email,
+            'phone'=>$request->phone,
+        ]);
+    });
+    //Delete Contact
+    Route::delete('contact/{id}',function($id){
+        return Contact::findOrFail($id)->delete();
+    });
+
+});
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
