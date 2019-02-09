@@ -12,7 +12,7 @@
 <body>
     <div class="container">
         <div id="app">
-            <h1>Contact</h1>
+            
             <contact></contact>
 
         </div>

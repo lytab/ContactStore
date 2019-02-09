@@ -972,8 +972,8 @@ module.exports = __webpack_require__(43);
 
 
 __webpack_require__(11);
-
 window.Vue = __webpack_require__(35);
+var axios = __webpack_require__(16);
 
 Vue.component('contact', __webpack_require__(54));
 
@@ -44123,14 +44123,78 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
-        return {};
+        return {
+            contact: {
+                id: '',
+                name: '',
+                email: '',
+                phone: ''
+            },
+            edit: false,
+            contacts: []
+        };
     },
     mounted: function mounted() {
-        console.log("contact hello");
+        this.getContacts();
+    },
+
+    methods: {
+        getContacts: function getContacts() {
+            var self = this;
+            axios.get('/api/contact').then(function (response) {
+                self.contacts = response.data;
+            }).catch(function (error) {
+                alert('Erreur dans le chargement des données');
+            });
+        },
+        create: function create() {
+            var self = this;
+            var params = Object.assign({}, self.contact);
+            axios.post('/api/contact/store', params).then(function () {
+
+                self.contact.name = '';
+                self.contact.email = '';
+                self.contact.phone = '';
+                self.edit = false;
+                self.getContacts();
+            }).catch(function () {
+                alert('Erreur dans la creation du contact');
+            });
+        },
+        update: function update(id) {
+            var self = this;
+            axios.patch('/api/contact/' + id).then(function (response) {
+                self.contacts = response.data;
+            }).catch(function (error) {
+                alert('Erreur dans la modification du contact');
+            });
+        }
     }
+
 });
 
 /***/ }),
@@ -44141,7 +44205,171 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [_vm._v("\n    hello Contact Form\n")])
+  return _c(
+    "div",
+    [
+      _c("h1", [_vm._v("Contacts :")]),
+      _vm._v(" "),
+      _c(
+        "form",
+        {
+          on: {
+            submit: function($event) {
+              $event.preventDefault()
+              _vm.edit ? _vm.update(_vm.contact.id) : _vm.create()
+            }
+          }
+        },
+        [
+          _c("div", { staticClass: "form-group" }, [
+            _c("label", { attrs: { for: "name" } }, [_vm._v("Contact Name :")]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.contact.name,
+                  expression: "contact.name"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: {
+                type: "text",
+                id: "name",
+                placeholder: "Enter Contact  Name",
+                name: "name"
+              },
+              domProps: { value: _vm.contact.name },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.contact, "name", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group" }, [
+            _c("label", { attrs: { for: "exampleInputEmail1" } }, [
+              _vm._v("Email address :")
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.contact.email,
+                  expression: "contact.email"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: {
+                type: "email",
+                name: "email",
+                id: "exampleInputEmail1",
+                "aria-describedby": "emailHelp",
+                placeholder: "Enter email"
+              },
+              domProps: { value: _vm.contact.email },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.contact, "email", $event.target.value)
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c(
+              "small",
+              {
+                staticClass: "form-text text-muted",
+                attrs: { id: "emailHelp" }
+              },
+              [_vm._v("We'll never share your email with anyone else.")]
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group" }, [
+            _c("label", { attrs: { for: "phone" } }, [
+              _vm._v("Phone Number :")
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.contact.phone,
+                  expression: "contact.phone"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: {
+                type: "text",
+                id: "phone",
+                name: "phone",
+                placeholder: "Phone Number"
+              },
+              domProps: { value: _vm.contact.phone },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.contact, "phone", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: !_vm.edit,
+                  expression: "!edit"
+                }
+              ],
+              staticClass: "btn btn-success",
+              attrs: { type: "submit" }
+            },
+            [_vm._v("create Contact")]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.edit,
+                  expression: "edit"
+                }
+              ],
+              staticClass: "btn btn-success",
+              attrs: { type: "submit" }
+            },
+            [_vm._v("Edit Contact")]
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _vm._l(_vm.contacts, function(cont) {
+        return _c("div", [_vm._v(" " + _vm._s(cont))])
+      })
+    ],
+    2
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
