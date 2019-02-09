@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>Contacts :</h1>
+        <h1>Add Contact</h1>
         <form @submit.prevent="edit ? update(contact.id):create()">
             <div class="form-group">
                 <label for="name">Contact Name :</label>
@@ -21,7 +21,15 @@
             <button v-show="!edit" type="submit" class="btn btn-success">create Contact</button>
             <button v-show="edit" type="submit" class="btn btn-success">Edit Contact</button>
         </form>
-        <div v-for="cont in contacts"> {{cont}}</div>
+        <h1>Contacts</h1>
+        <ul class="list-group">
+
+            <li v-for="cnt in contacts" class="list-group-item">
+              <strong>{{cnt.name}}</strong> |  {{cnt.email}} | {{cnt.phone}}
+              <button class="btn btn-warning btn-xs" @click="showContact(cnt.id)">Edit</button>
+              <button class="btn btn-danger btn-xs" @click="deleteContact(cnt.id)">Delete</button>
+             </li>
+        </ul>
     </div>
 </template>
 <script>
@@ -65,9 +73,36 @@
                 });
             },
             update(id){
+                console.log(id);
+                
                 let self=this;
-                axios.patch('/api/contact/'+id).then(response=>{
-                    self.contacts=response.data;
+                let params=Object.assign({},self.contact);
+
+                axios.patch('api/contact/'+id,params).then(()=>{
+                    self.getContacts();
+                }).catch(error=>{
+                    alert('Erreur dans la modification du contact');
+                });
+            },
+            showContact(id){
+                let self=this;
+
+                axios.get('/api/contact/'+id).then(function(response){
+                    self.contact.id=response.data['id'];
+                    self.contact.name=response.data['name'];
+                    self.contact.email=response.data['email'];
+                    self.contact.phone=response.data['phone'];
+                    self.edit=true;
+                }).catch(error=>{
+                    alert('Erreur dans la modification du contact');
+                });
+            },
+            deleteContact(id){
+                let self=this;
+
+                axios.delete('/api/contact/'+id).then(function(response){
+                   alert('Contact Deleted !');
+                   self.getContacts();
                 }).catch(error=>{
                     alert('Erreur dans la modification du contact');
                 });

@@ -44144,6 +44144,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -44186,9 +44194,36 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         update: function update(id) {
+            console.log(id);
+
             var self = this;
-            axios.patch('/api/contact/' + id).then(function (response) {
-                self.contacts = response.data;
+            var params = Object.assign({}, self.contact);
+
+            axios.patch('api/contact/' + id, params).then(function () {
+                self.getContacts();
+            }).catch(function (error) {
+                alert('Erreur dans la modification du contact');
+            });
+        },
+        showContact: function showContact(id) {
+            var self = this;
+
+            axios.get('/api/contact/' + id).then(function (response) {
+                self.contact.id = response.data['id'];
+                self.contact.name = response.data['name'];
+                self.contact.email = response.data['email'];
+                self.contact.phone = response.data['phone'];
+                self.edit = true;
+            }).catch(function (error) {
+                alert('Erreur dans la modification du contact');
+            });
+        },
+        deleteContact: function deleteContact(id) {
+            var self = this;
+
+            axios.delete('/api/contact/' + id).then(function (response) {
+                alert('Contact Deleted !');
+                self.getContacts();
             }).catch(function (error) {
                 alert('Erreur dans la modification du contact');
             });
@@ -44205,171 +44240,203 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c("h1", [_vm._v("Contacts :")]),
-      _vm._v(" "),
-      _c(
-        "form",
-        {
-          on: {
-            submit: function($event) {
-              $event.preventDefault()
-              _vm.edit ? _vm.update(_vm.contact.id) : _vm.create()
-            }
+  return _c("div", [
+    _c("h1", [_vm._v("Add Contact")]),
+    _vm._v(" "),
+    _c(
+      "form",
+      {
+        on: {
+          submit: function($event) {
+            $event.preventDefault()
+            _vm.edit ? _vm.update(_vm.contact.id) : _vm.create()
           }
-        },
-        [
-          _c("div", { staticClass: "form-group" }, [
-            _c("label", { attrs: { for: "name" } }, [_vm._v("Contact Name :")]),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.contact.name,
-                  expression: "contact.name"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: {
-                type: "text",
-                id: "name",
-                placeholder: "Enter Contact  Name",
-                name: "name"
-              },
-              domProps: { value: _vm.contact.name },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.contact, "name", $event.target.value)
-                }
-              }
-            })
-          ]),
+        }
+      },
+      [
+        _c("div", { staticClass: "form-group" }, [
+          _c("label", { attrs: { for: "name" } }, [_vm._v("Contact Name :")]),
           _vm._v(" "),
-          _c("div", { staticClass: "form-group" }, [
-            _c("label", { attrs: { for: "exampleInputEmail1" } }, [
-              _vm._v("Email address :")
-            ]),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.contact.email,
-                  expression: "contact.email"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: {
-                type: "email",
-                name: "email",
-                id: "exampleInputEmail1",
-                "aria-describedby": "emailHelp",
-                placeholder: "Enter email"
-              },
-              domProps: { value: _vm.contact.email },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.contact, "email", $event.target.value)
-                }
-              }
-            }),
-            _vm._v(" "),
-            _c(
-              "small",
+          _c("input", {
+            directives: [
               {
-                staticClass: "form-text text-muted",
-                attrs: { id: "emailHelp" }
-              },
-              [_vm._v("We'll never share your email with anyone else.")]
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "form-group" }, [
-            _c("label", { attrs: { for: "phone" } }, [
-              _vm._v("Phone Number :")
-            ]),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.contact.phone,
-                  expression: "contact.phone"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: {
-                type: "text",
-                id: "phone",
-                name: "phone",
-                placeholder: "Phone Number"
-              },
-              domProps: { value: _vm.contact.phone },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.contact, "phone", $event.target.value)
-                }
+                name: "model",
+                rawName: "v-model",
+                value: _vm.contact.name,
+                expression: "contact.name"
               }
-            })
+            ],
+            staticClass: "form-control",
+            attrs: {
+              type: "text",
+              id: "name",
+              placeholder: "Enter Contact  Name",
+              name: "name"
+            },
+            domProps: { value: _vm.contact.name },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.contact, "name", $event.target.value)
+              }
+            }
+          })
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "form-group" }, [
+          _c("label", { attrs: { for: "exampleInputEmail1" } }, [
+            _vm._v("Email address :")
           ]),
           _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.contact.email,
+                expression: "contact.email"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: {
+              type: "email",
+              name: "email",
+              id: "exampleInputEmail1",
+              "aria-describedby": "emailHelp",
+              placeholder: "Enter email"
+            },
+            domProps: { value: _vm.contact.email },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.contact, "email", $event.target.value)
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c(
+            "small",
+            { staticClass: "form-text text-muted", attrs: { id: "emailHelp" } },
+            [_vm._v("We'll never share your email with anyone else.")]
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "form-group" }, [
+          _c("label", { attrs: { for: "phone" } }, [_vm._v("Phone Number :")]),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.contact.phone,
+                expression: "contact.phone"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: {
+              type: "text",
+              id: "phone",
+              name: "phone",
+              placeholder: "Phone Number"
+            },
+            domProps: { value: _vm.contact.phone },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.contact, "phone", $event.target.value)
+              }
+            }
+          })
+        ]),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: !_vm.edit,
+                expression: "!edit"
+              }
+            ],
+            staticClass: "btn btn-success",
+            attrs: { type: "submit" }
+          },
+          [_vm._v("create Contact")]
+        ),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.edit,
+                expression: "edit"
+              }
+            ],
+            staticClass: "btn btn-success",
+            attrs: { type: "submit" }
+          },
+          [_vm._v("Edit Contact")]
+        )
+      ]
+    ),
+    _vm._v(" "),
+    _c("h1", [_vm._v("Contacts")]),
+    _vm._v(" "),
+    _c(
+      "ul",
+      { staticClass: "list-group" },
+      _vm._l(_vm.contacts, function(cnt) {
+        return _c("li", { staticClass: "list-group-item" }, [
+          _c("strong", [_vm._v(_vm._s(cnt.name))]),
+          _vm._v(
+            " |  " +
+              _vm._s(cnt.email) +
+              " | " +
+              _vm._s(cnt.phone) +
+              "\n          "
+          ),
           _c(
             "button",
             {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: !_vm.edit,
-                  expression: "!edit"
+              staticClass: "btn btn-warning btn-xs",
+              on: {
+                click: function($event) {
+                  return _vm.showContact(cnt.id)
                 }
-              ],
-              staticClass: "btn btn-success",
-              attrs: { type: "submit" }
+              }
             },
-            [_vm._v("create Contact")]
+            [_vm._v("Edit")]
           ),
           _vm._v(" "),
           _c(
             "button",
             {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: _vm.edit,
-                  expression: "edit"
+              staticClass: "btn btn-danger btn-xs",
+              on: {
+                click: function($event) {
+                  return _vm.deleteContact(cnt.id)
                 }
-              ],
-              staticClass: "btn btn-success",
-              attrs: { type: "submit" }
+              }
             },
-            [_vm._v("Edit Contact")]
+            [_vm._v("Delete")]
           )
-        ]
-      ),
-      _vm._v(" "),
-      _vm._l(_vm.contacts, function(cont) {
-        return _c("div", [_vm._v(" " + _vm._s(cont))])
-      })
-    ],
-    2
-  )
+        ])
+      }),
+      0
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
